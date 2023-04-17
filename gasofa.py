@@ -17,3 +17,51 @@ from threading import Semaphore
 coches = Queue(50)
 surtidores = Semaphore(1)
 tiempo_llegada = 900 #15 minutos
+
+#creo las funciones
+def coche(id):
+    global coches
+    global surtidores
+    global tiempo_llegada
+
+    while True:
+        coches.put()
+        surtidores.acquire()
+        print("El coche", id, "se pone en el surtidor\n")
+        coches.task_done()
+        #tiempo de llegada de los coches
+        time.sleep(random.randint(0,tiempo_llegada))
+        #se baja el conductor
+        print("El conductor baja del coche\n")
+        #se elige el combustible
+        combustible = random.randint(0,1)
+        if combustible == 0:
+            print("El conductor elige gasolina\n")
+        else:
+            print("El conductor elige diesel\n")
+        #el conductor llena el depósito
+        cantidad = random.randint(5,10)
+        print("El conductor elige una cantidad de", cantidad, "litros\n")
+        print("El conductor llena el depósito\n")
+        time.sleep(0.1)
+        #se paga en la caja única
+        print("El conductor paga en la caja única\n")
+        time.sleep(0.1)
+        #se va
+        print("El conductor se va\n")
+        coches.get()
+
+
+def main():
+    global coches
+    global surtidores
+    global tiempo_llegada
+    #creo los threads
+    for i in range(50):
+        coches.put(i)
+    for i in range(50):
+        threading.Thread(target=coche).start()
+
+
+if __name__ == "__main__":
+    main()
