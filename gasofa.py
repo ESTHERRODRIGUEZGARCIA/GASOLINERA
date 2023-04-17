@@ -14,21 +14,19 @@ import time
 from queue import Queue
 from threading import Semaphore
 
-coches = Queue(50)
 surtidores = Semaphore(1)
 tiempo_llegada = 900 #15 minutos
+coches = Queue()
+
+
 
 #creo las funciones
 def coche(id):
-    global coches
     global surtidores
     global tiempo_llegada
 
-    while True:
-        
-        surtidores.acquire()
-        print("El coche", id, "se pone en el surtidor\n")        #tiempo de llegada de los coches
-        time.sleep(random.randint(0,tiempo_llegada))
+    for i in range(50):
+        print("El coche {} se pone en el surtidor\n".format(id))
         #se baja el conductor
         print("El conductor baja del coche\n")
         #se elige el combustible
@@ -39,31 +37,26 @@ def coche(id):
             print("El conductor elige diesel\n")
         #el conductor llena el depósito
         cantidad = random.randint(5,10)
-        print("El conductor elige una cantidad de", cantidad, "litros\n")
+        print("El conductor elige una cantidad de {} litros\n".format(cantidad))
+        
         print("El conductor llena el depósito\n")
-        time.sleep(0.1)
         #se paga en la caja única
         print("El conductor paga en la caja única\n")
-        time.sleep(0.1)
         #se va
         print("El conductor se va\n")
         coches.get()
 
 
 
-def main():
-    global coches
-    global surtidores
-    global tiempo_llegada
-    start_time = time.time()
 
+def main():
+
+    i = 1
     #creo los threads
-    for i in range(50):
+    for i in range(51):
         t = threading.Thread(target=coche, args=(i,))
         t.start()
-    
-    coches.join()
-    print("Tiempor que tarda un coche en llegar e irse: %s segundos" % (time.time() - start_time))
+
 
 
 
