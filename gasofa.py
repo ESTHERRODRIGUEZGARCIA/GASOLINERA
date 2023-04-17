@@ -25,11 +25,9 @@ def coche(id):
     global tiempo_llegada
 
     while True:
-        coches.put()
+        
         surtidores.acquire()
-        print("El coche", id, "se pone en el surtidor\n")
-        coches.task_done()
-        #tiempo de llegada de los coches
+        print("El coche", id, "se pone en el surtidor\n")        #tiempo de llegada de los coches
         time.sleep(random.randint(0,tiempo_llegada))
         #se baja el conductor
         print("El conductor baja del coche\n")
@@ -52,15 +50,21 @@ def coche(id):
         coches.get()
 
 
+
 def main():
     global coches
     global surtidores
     global tiempo_llegada
+    start_time = time.time()
+
     #creo los threads
     for i in range(50):
-        coches.put(i)
-    for i in range(50):
-        threading.Thread(target=coche).start()
+        t = threading.Thread(target=coche, args=(i,))
+        t.start()
+    
+    coches.join()
+    print("Tiempor que tarda un coche en llegar e irse: %s segundos" % (time.time() - start_time))
+
 
 
 if __name__ == "__main__":
