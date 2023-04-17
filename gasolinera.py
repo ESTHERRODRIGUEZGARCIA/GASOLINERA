@@ -20,15 +20,15 @@ tiempo_llegada = 900 #15 minutos
 gas = threading.Semaphore(surtidores)
 
 def coche():
-    global gas
-    global tiempo_llegada
     global coches
     global surtidores
+    global tiempo_llegada
+
     while coches > 0:
         #tiempo de llegada de los coches
         time.sleep(random.randint(0,tiempo_llegada))
         #se baja el conductor
-        print("El conductor baja del coche")
+        print("El conductor baja del coche\n")
         #se elige el combustible
         combustible = random.randint(0,1)
         if combustible == 0:
@@ -46,7 +46,26 @@ def coche():
         #se va
         print("El conductor se va")
         coches -= 1
-    return coches
+
+def tiempo_medio():
+    global coches
+    global surtidores
+    global tiempo_llegada
+    #tiempo medio de llegada de los coches
+    tiempo_medio_llegada = tiempo_llegada / 2
+    #tiempo medio de llenado del depósito
+    tiempo_medio_llenado = 5
+    #tiempo medio de pago
+    tiempo_medio_pago = 3
+    #tiempo medio de salida
+    tiempo_medio_salida = tiempo_medio_llegada + tiempo_medio_llenado + tiempo_medio_pago
+    #tiempo medio de espera
+    tiempo_medio_espera = tiempo_medio_salida / surtidores
+    #tiempo medio de estancia
+    tiempo_medio_estancia = tiempo_medio_espera + tiempo_medio_salida
+    #tiempo medio de los coches
+    tiempo_medio_coches = tiempo_medio_estancia * coches
+    print("El tiempo medio de los coches es", tiempo_medio_coches, "segundos")
 
 def main():
     #se crea el thread
@@ -55,6 +74,9 @@ def main():
     t.start()
     #se espera a que termine el thread
     t.join()
+    #se calcula el tiempo medio
+    tiempo_medio()
+
 
 if __name__ == "__main__":
     main()
